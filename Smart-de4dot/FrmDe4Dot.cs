@@ -122,6 +122,12 @@ public partial class FrmDe4Dot : Form
             var selectedRowCount = dataList.Rows.GetRowCount(DataGridViewElementStates.Selected);
             if (selectedRowCount != 0)
             {
+                if (dataList.SelectedRows[0].Index > Program.Settings.ListDe4Dot.Count - 1)
+                {
+                    dataList.Rows.RemoveAt(dataList.SelectedRows[0].Index);
+                    return;
+                }
+
                 var listRemove = new List<int>();
                 for (var i = 0; i < selectedRowCount; i++)
                 {
