@@ -10,15 +10,15 @@ jobs:
   build:
     strategy:
       matrix:
-        platform: [Net7]
+        platform: [Net6]
         include:          
-          - platform: Net7
-            package-name: Net7
-            build-dir: net7.0-windows
+          - platform: Net6
+            package-name: Net6
+            build-dir: net6.0-windows
             proj-name: Smart-de4dot
             solution-name: Smart-de4dot.sln
             config: Release
-            dotnet: 7.0.x
+            dotnet: 6.0.x
 
     runs-on: windows-latest
 
