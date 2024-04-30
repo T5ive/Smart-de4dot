@@ -4,7 +4,7 @@ public partial class FrmMain : Form
 {
     #region Variable
 
-    private static List<string> _commandLine = new();
+    private static List<string> _commandLine = [];
     private Thread _thread;
     private Process _process;
     private static string? _de4dot;
@@ -15,6 +15,7 @@ public partial class FrmMain : Form
     {
         InitializeComponent();
         CheckForIllegalCrossThreadCalls = false;
+
         if (args is { Length: 0 }) return;
         txtFile.Text = args[0];
     }
@@ -23,6 +24,7 @@ public partial class FrmMain : Form
 
     private void FrmMain_Load(object sender, EventArgs e)
     {
+        Program.Settings = AppSettings.Load();
         UpdateList();
     }
 
@@ -72,7 +74,7 @@ public partial class FrmMain : Form
         if (e.Data == null) return;
         var files = (string[])e.Data.GetData(DataFormats.FileDrop);
         if (files is { Length: 0 }) return;
-        txtFile.Text = files[0];
+        txtFile.Text = files?[0];
         GetDetail();
     }
 
@@ -230,7 +232,7 @@ public partial class FrmMain : Form
         }
     }
 
-    private void DataReceived(object Sender, DataReceivedEventArgs e)
+    private void DataReceived(object sender, DataReceivedEventArgs e)
     {
         txtLog.AppendText(e.Data + Environment.NewLine);
     }

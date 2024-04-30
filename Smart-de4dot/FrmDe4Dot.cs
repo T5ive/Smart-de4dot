@@ -19,6 +19,7 @@ public partial class FrmDe4Dot : Form
     {
         dataList.DataSource = null;
         dataList.Rows.Clear();
+
         foreach (var item in Program.Settings.ListDe4Dot)
         {
             dataList.Rows.Add(item.Name, item.Path, "...");
@@ -35,6 +36,7 @@ public partial class FrmDe4Dot : Form
                 "Smart De4Dot",
                 MessageBoxButtons.YesNoCancel,
                 MessageBoxIcon.Information);
+
             if (dialog == DialogResult.Yes)
             {
                 Program.Settings.ListDe4Dot = SaveItem(dataList);
@@ -73,9 +75,12 @@ public partial class FrmDe4Dot : Form
 
         if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
         {
-            var dialog = new FolderBrowserDialog();
-            dialog.ShowNewFolderButton = true;
-            dialog.Description = "Select De4dot directory";
+            var dialog = new FolderBrowserDialog
+            {
+                ShowNewFolderButton = true,
+                Description = "Select De4dot directory"
+            };
+
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 if (!De4DotFile(dialog.SelectedPath)) return;
@@ -87,13 +92,16 @@ public partial class FrmDe4Dot : Form
 
     private static bool De4DotFile(string path)
     {
-        if (!File.Exists(path + "\\de4dot.exe"))
+        var de4dotPath = Path.Combine(path, "de4dot.exe");
+        var de4dot64Path = Path.Combine(path, "de4dot-x64.exe");
+
+        if (!File.Exists(de4dotPath))
         {
             MessageBox.Show("de4dot.exe not found, exiting...", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
             return false;
         }
-        if (!File.Exists(path + "\\de4dot-x64.exe"))
+
+        if (!File.Exists(de4dot64Path))
         {
             MessageBox.Show("de4dot-x64.exe not found, exiting...", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
@@ -154,15 +162,14 @@ public partial class FrmDe4Dot : Form
         try
         {
             var selectedRowCount = dataList.Rows.GetRowCount(DataGridViewElementStates.Selected);
-            if (selectedRowCount != 0)
-            {
-                var selectedRows = dataList.SelectedRows[0].Index;
-                var newIndex = type == 0 ? selectedRows - 1 : selectedRows + 1;
-                var item = Program.Settings.ListDe4Dot[selectedRows];
-                Program.Settings.ListDe4Dot.RemoveAt(selectedRows);
-                Program.Settings.ListDe4Dot.Insert(newIndex, item);
-                LoadItems(dataList);
-            }
+            if (selectedRowCount == 0) return;
+
+            var selectedRows = dataList.SelectedRows[0].Index;
+            var newIndex = type == 0 ? selectedRows - 1 : selectedRows + 1;
+            var item = Program.Settings.ListDe4Dot[selectedRows];
+            Program.Settings.ListDe4Dot.RemoveAt(selectedRows);
+            Program.Settings.ListDe4Dot.Insert(newIndex, item);
+            LoadItems(dataList);
         }
         catch (Exception ex)
         {

@@ -10,15 +10,15 @@ jobs:
   build:
     strategy:
       matrix:
-        platform: [Net6]
+        platform: [Net8]
         include:          
-          - platform: Net6
-            package-name: Net6
-            build-dir: net6.0-windows
+          - platform: Net8
+            package-name: Net8
+            build-dir: net8.0-windows
             proj-name: Smart-de4dot
             solution-name: Smart-de4dot.sln
             config: Release
-            dotnet: 6.0.x
+            dotnet: 8.0.x
 
     runs-on: windows-latest
 
@@ -50,7 +50,7 @@ jobs:
       continue-on-error: true
         
     - name:  Copy release files for upload
-      run: Copy-Item -Path T5ive-Tools\bin\Release\${{matrix.build-dir}}\* -Destination C:\builtfiles\${{matrix.proj-name}}-${{matrix.package-name}} -Recurse
+      run: Copy-Item -Path ${{matrix.proj-name}}\bin\Release\${{matrix.build-dir}}\* -Destination C:\builtfiles\${{matrix.proj-name}}-${{matrix.package-name}} -Recurse
 
     - uses: actions/upload-artifact@v3.1.2        
       with:
