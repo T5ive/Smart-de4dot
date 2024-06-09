@@ -93,17 +93,29 @@ public partial class FrmMain : Form
 
     private void InputUpdate()
     {
-        _commandLine = GetCommandLine();
-        var path = "";
+        string path;
         try
         {
             path = Program.Settings.ListDe4Dot[cbDe4dot.SelectedIndex].Path + "\\";
         }
         catch
         {
-            //
+            MessageBox.Show("Can not get de4dot path", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
         }
-        _de4dot = chk64.Checked ? path + "de4dot-x64.exe" : path + "de4dot.exe";
+
+        var de4dotPath = Path.Combine(path, "de4dot.exe");
+        var de4dot64Path = Path.Combine(path, "de4dot-x64.exe");
+        if (!File.Exists(de4dot64Path))
+        {
+            MessageBox.Show("de4dot-x64.exe not found, exiting...", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            chk64.Checked = false;
+            return;
+        }
+
+        _commandLine = GetCommandLine();
+
+        _de4dot = chk64.Checked ? de4dot64Path : de4dotPath;
         txtInput.Text = _de4dot + " " + string.Join(" ", _commandLine);
     }
 

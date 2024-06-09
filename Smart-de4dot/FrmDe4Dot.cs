@@ -95,19 +95,11 @@ public partial class FrmDe4Dot : Form
         var de4dotPath = Path.Combine(path, "de4dot.exe");
         var de4dot64Path = Path.Combine(path, "de4dot-x64.exe");
 
-        if (!File.Exists(de4dotPath))
-        {
-            MessageBox.Show("de4dot.exe not found, exiting...", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return false;
-        }
+        if (File.Exists(de4dotPath)) return true;
 
-        if (!File.Exists(de4dot64Path))
-        {
-            MessageBox.Show("de4dot-x64.exe not found, exiting...", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return false;
-        }
+        MessageBox.Show("de4dot.exe not found, exiting...", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        return false;
 
-        return true;
     }
 
     private void AddFunction()
